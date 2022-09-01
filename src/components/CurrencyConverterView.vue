@@ -6,7 +6,10 @@ import { getCurrencyByLanguageCode } from '@/controllers/countryCurrencies';
 
 const convert = (): number | null => {
     if (typeof baseCurrencyAmount.value === "number") {
-        return baseCurrencyAmount.value*30
+        return (
+            (baseCurrencyAmount.value / rates.value[baseCurrency.value])
+            * rates.value[targetCurrency.value]
+        )
     }
     return null;
 }
@@ -19,7 +22,7 @@ const targetCurrencyAmount = computed(() => {
     return convert()
 })
 
-const rates = ref(null);
+const rates = ref({} as {[key: string]: number});
 const ratesLoadingError = ref(false);
 
 onMounted(async () => {
@@ -27,7 +30,6 @@ onMounted(async () => {
     if (res.ok) {
         const json = await res.json();
         rates.value = json.rates;
-        console.log(rates.value);
     } else {
         ratesLoadingError.value = true;
     }
