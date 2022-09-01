@@ -3,10 +3,11 @@ import CurrencyConverterView from "./components/CurrencyConverterView.vue";
 </script>
 
 <template>
-  <main>
-    <CurrencyConverterView />
-  </main>
+  <CurrencyConverterView class="app_main-view"/>
 </template>
 
 <style lang="scss" scoped>
+  .app_main-view {
+    margin: 5rem auto;
+  }
 </style>
