@@ -4,14 +4,14 @@ import { onMounted, ref } from 'vue';
 import { getCurrencyByLanguageCode } from '@/controllers/countryCurrencies';
 
 
-const convert = (): number | null => {
-    if (typeof baseCurrencyAmount.value === "number") {
+const convert = (): number => {
+    if (isFinite(+baseCurrencyAmount.value)) {
         return (
-            (baseCurrencyAmount.value / rates.value[baseCurrency.value])
+            (+baseCurrencyAmount.value / rates.value[baseCurrency.value])
             * rates.value[targetCurrency.value]
         )
     }
-    return null;
+    return NaN;
 }
 
 
@@ -19,7 +19,7 @@ const baseCurrency = ref(getCurrencyByLanguageCode(navigator.languages[0]) || "U
 const targetCurrency = ref("USD");
 const baseCurrencyAmount = ref("");
 const targetCurrencyAmount = computed(() => {
-    return convert()?.toFixed(4);
+    return convert()?.toFixed(2);
 })
 
 // We expect an object with key names matching currency names:
@@ -52,7 +52,7 @@ onMounted(async () => {
 
         <input class="input converter_input" 
         name="inputFrom" 
-        v-model.number="baseCurrencyAmount"/>
+        v-model="baseCurrencyAmount"/>
 
         <label class="label converter_label converter_label__base" 
         for="baseCurrencySelect">
